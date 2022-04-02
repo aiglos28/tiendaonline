@@ -80,7 +80,23 @@ namespace TiendaOnline.Web.Controllers
             return View(country);
         }
 
-        // GET: Countries/Edit/5
+        //GET: Countries/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var @country = await _context.Countries.FindAsync(id);
+            if (@country == null)
+            {
+                return NotFound();
+            }
+            return View(@country);
+        }
+
+        // POST: Countries/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Country country)
@@ -106,7 +122,7 @@ namespace TiendaOnline.Web.Controllers
                     else
                     {
                         ModelState.AddModelError(string.Empty,
-                        dbUpdateException.InnerException.Message);
+                         dbUpdateException.InnerException.Message);
                     }
                 }
                 catch (Exception exception)
@@ -116,26 +132,8 @@ namespace TiendaOnline.Web.Controllers
             }
             return View(country);
         }
-
-        //GET: Countries/Delete/5
-
-       //public  async Task <IActionResult> Delete(int? id)
-       // {
-       //     if (id==null)
-       //     {
-       //         return NotFound();
-       //     }
-
-       //     var country = await _context.Countries
-       //         .FirstOrDefaultAsync(m=> m.Id==id);
-       //         if (country==null)
-       //     {
-       //         return NotFound();
-       //     }
-
-       //     return View(country);
-       // }
-
+        
+       
         // POST: Countries/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
