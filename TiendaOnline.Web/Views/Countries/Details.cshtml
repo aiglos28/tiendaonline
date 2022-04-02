@@ -4,6 +4,11 @@
     ViewData["Title"] = "Details";
 }
 
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+<link rel="stylesheet" href="~/lib/font-awesome/css/fontawesome.css" /> 
+<link rel="stylesheet" href="~/lib/Font-Awesome/css/regular.min.css"> 
+<link rel="stylesheet" href="~/lib/Font-Awesome/css/solid.min.css"> 
+
 <h1>Details</h1>
 
 <div>
@@ -13,12 +18,19 @@
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Name)
         </dt>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.DepartmentsNumber)
+        </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DepartmentsNumber)
         </dd>
     </dl>
 </div>
 <div>
+     <a asp-action="AddDepartment" asp-route-id="@Model.Id" class="btn btn-primary"> <i class="fas fa-plus"></i></a> 
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index" class="btn btn-success">Back to List</a>
 </div>

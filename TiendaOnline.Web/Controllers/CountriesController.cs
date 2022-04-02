@@ -22,7 +22,14 @@ namespace TiendaOnline.Web.Controllers
         // GET: Countries
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Countries.ToListAsync());
+            return View(await _context.Countries
+            .Include(c=> c.Departments)
+            .ToListAsync());
+        }
+
+        private object Include(Func<object, object> p)
+        {
+            throw new NotImplementedException();
         }
 
         // GET: Countries/Details/5
@@ -34,6 +41,9 @@ namespace TiendaOnline.Web.Controllers
             }
 
             var country = await _context.Countries
+                .Include(c=>c.Departments)
+                .ThenInclude(d=>d.Cities)
+
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (country == null)
             {
@@ -75,14 +85,20 @@ namespace TiendaOnline.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Country country)
         {
-            if (id != country.Id) { return NotFound(); }
+            if (id != country.Id) {
+                
+                return NotFound(); 
+            }
             if (ModelState.IsValid)
             {
                 try               
-                    { _context.Update(country);
-                        await _context.SaveChangesAsync(); return RedirectToAction(nameof(Index)); }
+                    {
+                        _context.Update(country);
+                        await _context.SaveChangesAsync(); 
+                        return RedirectToAction(nameof(Index));
+                    }
                     catch (DbUpdateException dbUpdateException)
-                {
+                    {
                     if (dbUpdateException.InnerException.Message.Contains("duplicate"))
                     {
                         ModelState.AddModelError(string.Empty, "Hay un registro con el mismo nombre.");
@@ -90,7 +106,7 @@ namespace TiendaOnline.Web.Controllers
                     else
                     {
                         ModelState.AddModelError(string.Empty,
-                            dbUpdateException.InnerException.Message);
+                        dbUpdateException.InnerException.Message);
                     }
                 }
                 catch (Exception exception)
@@ -101,40 +117,24 @@ namespace TiendaOnline.Web.Controllers
             return View(country);
         }
 
-        // POST: Countries/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Country country)
-        //{
-        //    if (id != country.Id)
-        //    {
-        //        return NotFound();
-        //    }
+        //GET: Countries/Delete/5
 
-        //    if (ModelState.IsValid)
-        //    {
-        //        try
-        //        {
-        //            _context.Update(country);
-        //            await _context.SaveChangesAsync();
-        //        }
-        //        catch (DbUpdateConcurrencyException)
-        //        {
-        //            if (!CountryExists(country.Id))
-        //            {
-        //                return NotFound();
-        //            }
-        //            else
-        //            {
-        //                throw;
-        //            }
-        //        }
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    return View(country);
-        //}
+       //public  async Task <IActionResult> Delete(int? id)
+       // {
+       //     if (id==null)
+       //     {
+       //         return NotFound();
+       //     }
+
+       //     var country = await _context.Countries
+       //         .FirstOrDefaultAsync(m=> m.Id==id);
+       //         if (country==null)
+       //     {
+       //         return NotFound();
+       //     }
+
+       //     return View(country);
+       // }
 
         // POST: Countries/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -142,7 +142,8 @@ namespace TiendaOnline.Web.Controllers
             if (id == null) {
                 return NotFound();
             }
-            Country country = await _context.Countries.FirstOrDefaultAsync(m => m.Id == id); 
+            Country country = await _context.Countries
+                .FirstOrDefaultAsync(m => m.Id == id); 
             if (country == null) {
                 return NotFound(); 
             }
