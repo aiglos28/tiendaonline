@@ -12,8 +12,8 @@ using TiendaOnline.Web.Data;
 namespace TiendaOnline.Web.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20220402013913_adiicionciudaddepartamento")]
-    partial class adiicionciudaddepartamento
+    [Migration("20220423032552_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
